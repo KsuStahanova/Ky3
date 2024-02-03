@@ -1,0 +1,105 @@
+pip install selenium
+
+from selenium import webdriver
+import time
+
+# Создание экземпляра веб-драйвера (Chrome)
+driver = webdriver.Chrome()
+
+
+# Тест 1: Кликнуть на продукт на главной странице и проверить переключение скриншотов
+def test_product_images():
+    driver.get("https://demo.opencart.com/")
+    product_link = driver.find_element_by_css_selector(".product-layout:nth-child(1) .caption a")
+    product_link.click()
+    time.sleep(2)  # Даем странице немного времени для загрузки
+    thumbnails = driver.find_elements_by_css_selector(".thumbnail")
+    if len(thumbnails) > 1:
+        thumbnails[1].click()
+        time.sleep(2)
+
+
+# Тест 2: Сменить валюту на главной странице 
+def test_currency_change():
+    driver.get("https://demo.opencart.com/")
+    currency_dropdown = driver.find_element_by_css_selector("#form-currency")
+    currency_dropdown.click()
+
+    euro_option = driver.find_element_by_name("EUR")
+    euro_option.click()
+    time.sleep(2)
+
+    currency_dropdown = driver.find_element_by_css_selector("#form-currency")
+    currency_dropdown.click()
+
+    dollar_option = driver.find_element_by_name("USD")
+    dollar_option.click()
+    time.sleep(2)
+
+
+# Тест 3: Перейти через меню в категорию 
+def test_empty_category():
+    driver.get("https://demo.opencart.com/")
+    pc_category = driver.find_element_by_link_text("PC (0)")
+    pc_category.click()
+    time.sleep(2)
+    empty_message = driver.find_element_by_css_selector("#content p")
+    if "There are no products to list in this category." in empty_message.text:
+        print("The PC category is empty")
+
+
+# Тест 4: Пройти через меню в регистрацию
+def test_registration():
+    driver.get("https://demo.opencart.com/")
+    registration_link = driver.find_element_by_link_text("My Account")
+    registration_link.click()
+    time.sleep(2)
+    register_button = driver.find_element_by_link_text("Register")
+    register_button.click()
+    time.sleep(2)
+    first_name = driver.find_element_by_id("input-firstname")
+    last_name = driver.find_element_by_id("input-lastname")
+    email = driver.find_element_by_id("input-email")
+    telephone = driver.find_element_by_id("input-telephone")
+    password = driver.find_element_by_id("input-password")
+    confirm_password = driver.find_element_by_id("input-confirm")
+
+    first_name.send_keys("John")
+    last_name.send_keys("Doe")
+    email.send_keys("johndoe@example.com")
+    telephone.send_keys("1234567890")
+    password.send_keys("password")
+    confirm_password.send_keys("password")
+
+    agree_policy = driver.find_element_by_name("agree")
+    agree_policy.click()
+
+    submit_button = driver.find_element_by_css_selector("input[value='Continue']")
+    submit_button.click()
+    time.sleep(2)
+
+
+# Тест 5: Написать в строке поиска 
+def test_search():
+    driver.get("https://demo.opencart.com/")
+    search_input = driver.find_element_by_name("search")
+    search_input.send_keys("phone")
+    search_button = driver.find_element_by_css_selector(".input-group-btn button")
+    search_button.click()
+    time.sleep(2)
+
+
+
+
+currency_change()
+test_empty_category()
+test_registration()
+test_search()
+
+# Закрытие веб-драйвера
+driver.quit()
+
+
+
+
+test_opencart_detailed.py
